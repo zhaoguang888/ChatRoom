@@ -63,7 +63,7 @@ void SocketConnect::dataReceived_Slot()
 			break;
 		case userExit:
 			in >> userExitName >> userExitMsg;
-			emit userExit_Signals(userExitMsg, userExitName);
+			emit userExit_Signals(userExitName, userExitMsg);
 			break;
 		default:
 			break;
