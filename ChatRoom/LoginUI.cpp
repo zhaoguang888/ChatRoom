@@ -10,6 +10,7 @@ LoginUI::LoginUI(QWidget *parent)
 	ip = "0.0.0.0";
 	serverIP = new QHostAddress();
 	ui.portLabel->setText(QString::number(port));
+
 	login = SocketConnect::GetIntance();	//获取Socket的单例
 
 	ui.loginBtn->setFocus();
@@ -25,8 +26,9 @@ LoginUI::~LoginUI()
 //注册按钮
 void LoginUI::btnRegister_Slots()
 {
-		r = new RegisterUI(this);
-		int ok = r->exec();
+	registerUI = new RegisterUI(this);
+	registerUI->ip = ui.serverIPLineEdit->text();
+	int ok = registerUI->exec();
 }
 
 //登录按钮
@@ -59,7 +61,7 @@ void LoginUI::btnLogin_Slots()
 	if (login->waitForConnected())
 	{
 		//发送账号和密码给服务器
-		login->sendRequest(RequestType::userLogin);
+		login->sendRequest(RequestTypeEnum::USERLOGIN);
 	}
 	else
 	{

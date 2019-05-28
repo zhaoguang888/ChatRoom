@@ -15,7 +15,7 @@ public:
 
 public:
 	SocketConnect* login;	//Socket单例
-	RegisterUI* r;	//注册界面
+	RegisterUI* registerUI;			//注册界面
 
 	int port;	//端口号
 	QString ip;	//服务器ip地址
@@ -24,8 +24,9 @@ public:
 private slots:
 	void btnRegister_Slots();	//注册按钮
 	void btnLogin_Slots();		//登录按钮
-
 	void userLoginCheck_Slots(int);	//登录检查信息
+
+
 
 private:
 	Ui::LoginUI ui;

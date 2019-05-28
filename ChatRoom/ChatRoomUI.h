@@ -23,6 +23,10 @@ public slots:
 	void updateAllUser_Slots(QString, QString);
 	void userExit_Slots(QString, QString);
 
+	void sendMessageBtn_Slots();
+	bool eventFilter(QObject * target, QEvent * event); //ÊÂ¼þ¹ýÂËÆ÷
+	void ChatMessage_Slots(QString);
+
 private:
 	Ui::ChatRoomUIClass ui;
 };

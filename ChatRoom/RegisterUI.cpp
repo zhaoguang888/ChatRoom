@@ -1,13 +1,14 @@
 #include "RegisterUI.h"
 #include <QMessageBox>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
 
 RegisterUI::RegisterUI(QWidget *parent)
 	: QDialog(parent)
 {
 	ui.setupUi(this);
+
+	serverIP = new QHostAddress();
+	port = 8030;
+
 
 	connect(ui.btn_OK, SIGNAL(clicked()), this, SLOT(btnOK_Slots()));			//确定按钮
 	connect(ui.btn_Cancel, SIGNAL(clicked()), this, SLOT(btnCancel_Slots()));	//取消按钮
@@ -33,10 +34,29 @@ void RegisterUI::btnOK_Slots()
 	//检查两次密码是否相同
 	if (password == passwordSure)
 	{
-		//发送名字和密码给服务器
-		manager = new QNetworkAccessManager(this);
-		connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(replyFinished(QNetworkReply *)));
-		manager->get(QNetworkRequest(QUrl("http://www.zhaoguangcloud.cn:8080/Servlet/Hello")));
+		registerUI = SocketConnect::GetIntance();
+
+		//连接服务器并发送名字和密码给服务器
+		if (!this->serverIP->setAddress(ip))
+		{
+			qDebug() << QString::fromLocal8Bit("服务器地址错误，请重新输入！");
+			return;
+		}
+		registerUI->connectToHost(*serverIP, port);
+		if (registerUI->waitForConnected())
+		{
+			//发送账号和密码给服务器
+			registerUI->name_Register = username;
+			registerUI->password_Register = password;
+			registerUI->sendRequest(RequestTypeEnum::USERREGISTER);
+		}
+		else
+		{
+			QMessageBox::information(this, QString::fromLocal8Bit("提示"), QString::fromLocal8Bit("连接服务器失败！"));
+			return;
+		}
+
+		connect(registerUI, SIGNAL(userRegister_Signals(QString)), this, SLOT(userRegister_Slots(QString)));
 
 	}
 	else
@@ -44,18 +64,18 @@ void RegisterUI::btnOK_Slots()
 		QMessageBox::information(this, QString::fromLocal8Bit("提示"), QString::fromLocal8Bit("两次输入的密码不正确！"));
 	}
 }
-void RegisterUI::replyFinished(QNetworkReply *reply)
-{
-	QString all = reply->readAll();
-	QMessageBox::information(this, QString::fromLocal8Bit("注册成功！"), QString::fromLocal8Bit("注册成功！你的账号是：\n%1").arg(all));
-	reply->deleteLater();
-	this->accept();
-}
 
 //取消按钮
 void RegisterUI::btnCancel_Slots()
 {
 	this->reject();
 }
+
+void RegisterUI::userRegister_Slots(QString account)
+{
+	QMessageBox::information(this, QString::fromLocal8Bit("注册成功！"), QString::fromLocal8Bit("注册成功！你的账号是：\n%1").arg(account));
+	this->accept();
+}
+
 
 

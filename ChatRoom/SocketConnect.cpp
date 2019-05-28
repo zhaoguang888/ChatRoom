@@ -26,12 +26,18 @@ SocketConnect::~SocketConnect()
 
 
 //请求到服务器的类型
-void SocketConnect::sendRequest(RequestType type)
+void SocketConnect::sendRequest(RequestTypeEnum type)
 {
 	switch (type)
 	{
-	case userLogin:
+	case USERLOGIN:
 		sendUserLogin();
+		break;
+	case CHATMESSAGE:
+		sendChatMessage();
+		break;
+	case USERREGISTER:
+		sendRegisterMessage();
 		break;
 	default:
 		break;
@@ -49,21 +55,29 @@ void SocketConnect::dataReceived_Slot()
 		in >> type;
 		switch (type)
 		{
-		case userLoginCheck:
+		case USERLOGINCHECK:
 			in >> statusValidate;
 			emit userLoginCheck_Signals(statusValidate);
 			break;
-		case noticeAllClient:
+		case NOTICEALLCLIENT:
 			in >> thisProgramUserName >> userEnterMsg;
 			emit noticeAllClient_Signals(userEnterMsg, thisProgramUserName);
 			break;
-		case updateAllUser:
+		case UPDATEALLUSER:
 			in >> userAccountName >> userComputerIP;
 			emit updateAllUser_Signals(userAccountName, userComputerIP);
 			break;
-		case userExit:
+		case USEREXIT:
 			in >> userExitName >> userExitMsg;
 			emit userExit_Signals(userExitName, userExitMsg);
+			break;
+		case CHATMESSAGE:
+			in >> chatMessage_Response;
+			emit ChatMessage_Signals(chatMessage_Response);
+			break;
+		case USERREGISTER:
+			in >> account_Register;
+			emit userRegister_Signals(account_Register);
 			break;
 		default:
 			break;
@@ -82,10 +96,38 @@ void SocketConnect::sendUserLogin()
 	QByteArray messageData;
 	QDataStream out(&messageData, QIODevice::WriteOnly);
 	//		登录类型         本机名      本机ip地址   本机账号   本机密码    本机登录状态
-	out << userLogin << loaclComputerName << loaclComputerIP << UserAccount << UserPassword << loginStatus;
+	out << USERLOGIN << loaclComputerName << loaclComputerIP << UserAccount << UserPassword << loginStatus;
 
 	int length = write(messageData);
 	if (length != messageData.length())
+	{
+		qDebug() << QString::fromLocal8Bit("数据发送错误");
+		return;
+	}
+}
+
+void SocketConnect::sendChatMessage()
+{
+	QByteArray messageData;
+	QDataStream out(&messageData, QIODevice::WriteOnly);
+	out << CHATMESSAGE << UserAccount << chatMessage_Request;
+
+	int length = write(messageData);
+	if (length != messageData.length())
+	{
+		qDebug() << QString::fromLocal8Bit("数据发送错误");
+		return;
+	}
+}
+
+void SocketConnect::sendRegisterMessage()
+{
+	QByteArray data;
+	QDataStream out(&data, QIODevice::WriteOnly);
+	out << USERREGISTER << name_Register << password_Register;
+
+	int length = write(data);
+	if (length != data.length())
 	{
 		qDebug() << QString::fromLocal8Bit("数据发送错误");
 		return;
