@@ -40,6 +40,8 @@ void RegisterUI::btnOK_Slots()
 		QString url = "http://"+ ip + ":8080/ChatRoomServer/UserRegister?name=" + username + "&password=" + password;
 		manager->get(QNetworkRequest(QUrl(url)));
 
+		this->accept();
+
 	}
 	else
 	{
@@ -56,7 +58,7 @@ void RegisterUI::btnCancel_Slots()
 void RegisterUI::replyFinished(QNetworkReply * reply)
 {
 	QString all = reply->readAll();
-	QMessageBox::information(this, QString::fromLocal8Bit("提示"), all);
+	QMessageBox::information(this, QString::fromLocal8Bit("注册成功！"), QString::fromLocal8Bit("注册成功！你的账号是：\n%1").arg(all));
 	reply->deleteLater();
 }
 

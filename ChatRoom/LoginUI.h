@@ -15,7 +15,7 @@ public:
 
 public:
 	SocketConnect* login;		//Socket单例
-	RegisterUI* registerUI;			//注册界面
+	RegisterUI* registerUI;		//注册界面
 
 	int port;	//端口号
 	QString ip;	//服务器ip地址
