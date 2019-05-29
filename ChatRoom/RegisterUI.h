@@ -3,6 +3,7 @@
 #include <QDialog>
 #include "ui_RegisterUI.h"
 #include "SocketConnect.h"
+#include <QtNetwork>
 
 class RegisterUI : public QDialog
 {
@@ -12,22 +13,20 @@ public:
 	RegisterUI(QWidget *parent = Q_NULLPTR);
 	~RegisterUI();
 
+private:
+	QNetworkAccessManager *manager;
 
 public:
-	SocketConnect *registerUI;	//Socket单例
-
 	int port;	//端口号
-	QString ip;	//服务器ip地址
-	QHostAddress *serverIP;//服务器ip地址对象
-
-private:
+	QString ip;	//服务器ip
 
 
 private slots:
 	void btnOK_Slots();
 	void btnCancel_Slots();
 
-	void userRegister_Slots(QString);	//接收账号
+	void replyFinished(QNetworkReply *);
+
 
 
 

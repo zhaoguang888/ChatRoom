@@ -27,7 +27,7 @@ QT_BEGIN_NAMESPACE
 class Ui_RegisterUI
 {
 public:
-    QVBoxLayout *verticalLayout_3;
+    QVBoxLayout *verticalLayout_4;
     QLabel *label_4;
     QHBoxLayout *horizontalLayout_2;
     QSpacerItem *horizontalSpacer;
@@ -41,23 +41,29 @@ public:
     QLineEdit *password_R;
     QLineEdit *passwordSure_R;
     QSpacerItem *horizontalSpacer_2;
+    QVBoxLayout *verticalLayout_3;
     QHBoxLayout *horizontalLayout_3;
     QSpacerItem *horizontalSpacer_3;
     QPushButton *btn_Cancel;
     QSpacerItem *horizontalSpacer_4;
     QPushButton *btn_OK;
     QSpacerItem *horizontalSpacer_5;
+    QHBoxLayout *horizontalLayout_4;
+    QSpacerItem *horizontalSpacer_6;
+    QLabel *label_5;
+    QLineEdit *serverIP;
+    QSpacerItem *horizontalSpacer_7;
 
     void setupUi(QDialog *RegisterUI)
     {
         if (RegisterUI->objectName().isEmpty())
             RegisterUI->setObjectName(QStringLiteral("RegisterUI"));
-        RegisterUI->resize(389, 238);
+        RegisterUI->resize(414, 270);
         RegisterUI->setMinimumSize(QSize(389, 230));
-        verticalLayout_3 = new QVBoxLayout(RegisterUI);
-        verticalLayout_3->setSpacing(6);
-        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        verticalLayout_4 = new QVBoxLayout(RegisterUI);
+        verticalLayout_4->setSpacing(6);
+        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
         label_4 = new QLabel(RegisterUI);
         label_4->setObjectName(QStringLiteral("label_4"));
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
@@ -71,7 +77,7 @@ public:
         label_4->setFont(font);
         label_4->setAlignment(Qt::AlignCenter);
 
-        verticalLayout_3->addWidget(label_4);
+        verticalLayout_4->addWidget(label_4);
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
@@ -142,8 +148,11 @@ public:
         horizontalLayout_2->addItem(horizontalSpacer_2);
 
 
-        verticalLayout_3->addLayout(horizontalLayout_2);
+        verticalLayout_4->addLayout(horizontalLayout_2);
 
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
@@ -173,6 +182,33 @@ public:
 
         verticalLayout_3->addLayout(horizontalLayout_3);
 
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        horizontalSpacer_6 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer_6);
+
+        label_5 = new QLabel(RegisterUI);
+        label_5->setObjectName(QStringLiteral("label_5"));
+
+        horizontalLayout_4->addWidget(label_5);
+
+        serverIP = new QLineEdit(RegisterUI);
+        serverIP->setObjectName(QStringLiteral("serverIP"));
+
+        horizontalLayout_4->addWidget(serverIP);
+
+        horizontalSpacer_7 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer_7);
+
+
+        verticalLayout_3->addLayout(horizontalLayout_4);
+
+
+        verticalLayout_4->addLayout(verticalLayout_3);
+
 
         retranslateUi(RegisterUI);
 
@@ -188,6 +224,8 @@ public:
         label_2->setText(QApplication::translate("RegisterUI", "\347\241\256\350\256\244\345\257\206\347\240\201\357\274\232", Q_NULLPTR));
         btn_Cancel->setText(QApplication::translate("RegisterUI", "\345\217\226\346\266\210", Q_NULLPTR));
         btn_OK->setText(QApplication::translate("RegisterUI", "\347\241\256\345\256\232", Q_NULLPTR));
+        label_5->setText(QApplication::translate("RegisterUI", "\346\234\215\345\212\241\345\231\250IP\345\234\260\345\235\200\357\274\232", Q_NULLPTR));
+        serverIP->setText(QApplication::translate("RegisterUI", "127.0.0.1", Q_NULLPTR));
     } // retranslateUi
 
 };

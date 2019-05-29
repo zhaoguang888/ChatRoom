@@ -5,7 +5,7 @@
 
 enum RequestTypeEnum
 {
-	USERLOGIN, USERLOGINCHECK, UPDATEALLUSER, NOTICEALLCLIENT, USEREXIT, CHATMESSAGE, USERREGISTER
+	USERLOGIN, USERLOGINCHECK, UPDATEALLUSER, NOTICEALLCLIENT, USEREXIT, CHATMESSAGE
 };
 
 class SocketConnect : public QTcpSocket
@@ -41,12 +41,6 @@ public:
 	QString userExitName;	//用户退出名字
 	QString userExitMsg;	//用户退出消息
 
-	//注册消息
-	QString name_Register;		//注册名字
-	QString password_Register;	//注册密码
-	QString account_Register;	//服务器返回的账号
-
-
 private:
 	QString getloaclComputerIP();	//本地ip地址获取函数
 
@@ -56,7 +50,6 @@ public:
 
 	void sendUserLogin();			//请求登录
 	void sendChatMessage();			//发送聊天消息
-	void sendRegisterMessage();		//注册信息
 
 private slots:
 	void dataReceived_Slot();		//数据来到的发出的 readyRead() 信号
@@ -71,8 +64,6 @@ signals:
 	void userExit_Signals(QString, QString);	//退出信息
 signals:
 	void ChatMessage_Signals(QString);	//聊天消息
-signals:
-	void userRegister_Signals(QString);	//注册消息
 
 
 public:

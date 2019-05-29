@@ -36,9 +36,6 @@ void SocketConnect::sendRequest(RequestTypeEnum type)
 	case CHATMESSAGE:
 		sendChatMessage();
 		break;
-	case USERREGISTER:
-		sendRegisterMessage();
-		break;
 	default:
 		break;
 	}
@@ -75,10 +72,6 @@ void SocketConnect::dataReceived_Slot()
 			in >> chatMessage_Response;
 			emit ChatMessage_Signals(chatMessage_Response);
 			break;
-		case USERREGISTER:
-			in >> account_Register;
-			emit userRegister_Signals(account_Register);
-			break;
 		default:
 			break;
 		}
@@ -114,20 +107,6 @@ void SocketConnect::sendChatMessage()
 
 	int length = write(messageData);
 	if (length != messageData.length())
-	{
-		qDebug() << QString::fromLocal8Bit("数据发送错误");
-		return;
-	}
-}
-
-void SocketConnect::sendRegisterMessage()
-{
-	QByteArray data;
-	QDataStream out(&data, QIODevice::WriteOnly);
-	out << USERREGISTER << name_Register << password_Register;
-
-	int length = write(data);
-	if (length != data.length())
 	{
 		qDebug() << QString::fromLocal8Bit("数据发送错误");
 		return;

@@ -14,7 +14,7 @@ public:
 	~LoginUI();
 
 public:
-	SocketConnect* login;	//Socket单例
+	SocketConnect* login;		//Socket单例
 	RegisterUI* registerUI;			//注册界面
 
 	int port;	//端口号

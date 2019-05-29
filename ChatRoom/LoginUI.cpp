@@ -27,7 +27,6 @@ LoginUI::~LoginUI()
 void LoginUI::btnRegister_Slots()
 {
 	registerUI = new RegisterUI(this);
-	registerUI->ip = ui.serverIPLineEdit->text();
 	int ok = registerUI->exec();
 }
 
