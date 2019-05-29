@@ -16,11 +16,6 @@ public:
 private:
 	QNetworkAccessManager *manager;
 
-public:
-	int port;	//¶Ë¿ÚºÅ
-	QString ip;	//·þÎñÆ÷ip
-
-
 private slots:
 	void btnOK_Slots();
 	void btnCancel_Slots();

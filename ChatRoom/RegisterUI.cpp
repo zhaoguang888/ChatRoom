@@ -7,8 +7,6 @@ RegisterUI::RegisterUI(QWidget *parent)
 {
 	ui.setupUi(this);
 
-	port = 8030;
-
 	connect(ui.btn_OK, SIGNAL(clicked()), this, SLOT(btnOK_Slots()));			//确定按钮
 	connect(ui.btn_Cancel, SIGNAL(clicked()), this, SLOT(btnCancel_Slots()));	//取消按钮
 }
@@ -29,15 +27,18 @@ void RegisterUI::btnOK_Slots()
 	//取得账号和密码
 	QString username = ui.name_R->text();
 	QString password = ui.password_R->text();
-	QString passwordSure = ui.passwordSure_R->text();
 
 	//检查两次密码是否相同
-	if (password == passwordSure)
+	if (password == ui.passwordSure_R->text())
 	{
 		//利用http发送名字和密码给服务器
 		manager = new QNetworkAccessManager(this);
 		connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
-		manager->get(QNetworkRequest(QUrl("http://localhost:8080/ChatRoomServer/UserRegister?name=%E6%A2%85%E8%A5%BF&password=123")));
+
+		QString ip = ui.serverIP->text();
+
+		QString url = "http://"+ ip + ":8080/ChatRoomServer/UserRegister?name=" + username + "&password=" + password;
+		manager->get(QNetworkRequest(QUrl(url)));
 
 	}
 	else
