@@ -8,18 +8,13 @@
 class LoginUI : public QDialog
 {
 	Q_OBJECT
-
 public:
 	LoginUI(QWidget *parent = Q_NULLPTR);
 	~LoginUI();
 
-public:
-	SocketConnect* login;		//Socket单例
-	RegisterUI* registerUI;		//注册界面
-
-	int port;	//端口号
-	QString ip;	//服务器ip地址
-	QHostAddress *serverIP;//服务器ip地址对象
+private:
+	SocketConnect *socketConnect;	//Socket单例
+	RegisterUI* registerUI;			//注册界面
 
 private slots:
 	void btnRegister_Slots();	//注册按钮

@@ -6,18 +6,16 @@ LoginUI::LoginUI(QWidget *parent)
 {
 	ui.setupUi(this);
 
-	port = 8030;
-	ip = "0.0.0.0";
-	serverIP = new QHostAddress();
-	ui.portLabel->setText(QString::number(port));
-
-	login = SocketConnect::GetIntance();	//获取Socket的单例
-
+	socketConnect = SocketConnect::GetIntance(); //获取Socket的单例
+	socketConnect->port = 8030;			//设置端口号
+	socketConnect->serverIP = "0.0.0.0";//初始化服务器ip地址
+	ui.portLabel->setText(QString::number(socketConnect->port));
 	ui.loginBtn->setFocus();
+
+
 	connect(ui.registerBtn, SIGNAL(clicked()), this, SLOT(btnRegister_Slots()));			//注册按钮
 	connect(ui.loginBtn, SIGNAL(clicked()), this, SLOT(btnLogin_Slots()));					//登录按钮
-
-	connect(login, SIGNAL(userLoginCheck_Signals(int)), this, SLOT(userLoginCheck_Slots(int)));	//登录检查信息
+	connect(socketConnect, SIGNAL(userLoginCheck_Signals(int)), this, SLOT(userLoginCheck_Slots(int)));	//接收登录检查信息
 }
 LoginUI::~LoginUI()
 {
@@ -26,6 +24,9 @@ LoginUI::~LoginUI()
 //注册按钮
 void LoginUI::btnRegister_Slots()
 {
+	//获取服务器ip地址
+	socketConnect->serverIP = ui.serverIPLineEdit->text();
+
 	registerUI = new RegisterUI(this);
 	int ok = registerUI->exec();
 }
@@ -33,6 +34,9 @@ void LoginUI::btnRegister_Slots()
 //登录按钮
 void LoginUI::btnLogin_Slots()
 {
+	//获取服务器ip地址
+	socketConnect->serverIP = ui.serverIPLineEdit->text();
+
 	if (ui.accountLineEdit->text().isEmpty() || ui.passwordLineEdit->text().isEmpty())
 	{
 		QMessageBox::information(this, QString::fromLocal8Bit("提示"), QString::fromLocal8Bit("请输入账号或密码！！"));
@@ -44,23 +48,19 @@ void LoginUI::btnLogin_Slots()
 		return;
 	}
 
+	//获取账号、密码
+	socketConnect->userAccount = ui.accountLineEdit->text();
+	socketConnect->userPassword = ui.passwordLineEdit->text();
 
-	//取得账号、密码、服务器ip地址
-	login->UserAccount = ui.accountLineEdit->text();
-	login->UserPassword = ui.passwordLineEdit->text();
-	ip = ui.serverIPLineEdit->text();
-
-	//连接服务器并且发送账号、密码等信息给服务器
-	if (!this->serverIP->setAddress(ip))
+	//连接服务器并发送数据给服务器
+	if (!socketConnect->hostAddress->setAddress(socketConnect->serverIP))
 	{
-		qDebug() << QString::fromLocal8Bit("服务器地址错误，请重新输入！");
 		return;
 	}
-	login->connectToHost(*serverIP, port);
-	if (login->waitForConnected())
+	socketConnect->connectToHost(*socketConnect->hostAddress, socketConnect->port);
+	if (socketConnect->waitForConnected())
 	{
-		//发送账号和密码给服务器
-		login->sendRequest(RequestTypeEnum::USERLOGIN);
+		socketConnect->sendRequest(RequestTypeEnum::USERLOGIN);
 	}
 	else
 	{
@@ -70,6 +70,7 @@ void LoginUI::btnLogin_Slots()
 	}
 }
 
+//登录检查信息
 void LoginUI::userLoginCheck_Slots(int ok)
 {
 	if (ok == 1)
@@ -79,12 +80,12 @@ void LoginUI::userLoginCheck_Slots(int ok)
 	}
 	else if (ok == 2)
 	{
-		qDebug() << QString::fromLocal8Bit("已经登录");
 		QMessageBox::information(this, QString::fromLocal8Bit("提示"), QString::fromLocal8Bit("你已登录，请关闭程序后再登录！"));
-
+		socketConnect->disconnectFromHost();
 	}
 	else
 	{
 		QMessageBox::information(this, QString::fromLocal8Bit("提示"), QString::fromLocal8Bit("用户名或密码错误！"));
+		socketConnect->disconnectFromHost();
 	}
 }

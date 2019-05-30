@@ -7,6 +7,7 @@ ChatRoomUI::ChatRoomUI(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	//获取Socket的单例
 	chatRoom = SocketConnect::GetIntance(); 
 	connect(chatRoom, SIGNAL(noticeAllClient_Signals(QString, QString)), this, SLOT(noticeAllClient_Slots(QString, QString)));
 	connect(chatRoom, SIGNAL(updateAllUser_Signals(QString, QString)), this, SLOT(updateAllUser_Slots(QString, QString)));
@@ -15,12 +16,12 @@ ChatRoomUI::ChatRoomUI(QWidget *parent)
 	ui.sendLineEdit->setFocusPolicy(Qt::StrongFocus);
 	ui.sendLineEdit->setFocus();
 	ui.sendLineEdit->installEventFilter(this);  //设置完后自动调用其eventFilter函数
-	connect(ui.sendBtn, SIGNAL(clicked()), this, SLOT(sendMessageBtn_Slots())); //发送消息
-	connect(chatRoom, SIGNAL(ChatMessage_Signals(QString)), this, SLOT(ChatMessage_Slots(QString)));
+	connect(ui.sendBtn, SIGNAL(clicked()), this, SLOT(sendMessageBtn_Slots()));						//发送消息
+	connect(chatRoom, SIGNAL(chatMessage_Signals(QString)), this, SLOT(chatMessage_Slots(QString)));//聊天消息
 
 }
 
-
+//通知所有用户登录信息
 void ChatRoomUI::noticeAllClient_Slots(QString userEnterMsg, QString thisProgramUserName)
 {
 	if (userNameSwitch)
@@ -36,6 +37,7 @@ void ChatRoomUI::noticeAllClient_Slots(QString userEnterMsg, QString thisProgram
 
 }
 
+//更新所有用户
 void ChatRoomUI::updateAllUser_Slots(QString userAccountName, QString userComputerIP)
 {
 	bool isEmpty = ui.tableWidget->findItems(userAccountName, Qt::MatchExactly).isEmpty();
@@ -52,11 +54,12 @@ void ChatRoomUI::updateAllUser_Slots(QString userAccountName, QString userComput
 	}
 }
 
+//关闭窗口重写函数
 void ChatRoomUI::closeEvent(QCloseEvent * event)
 {
 	chatRoom->disconnectFromHost();
 }
-
+//用户退出
 void ChatRoomUI::userExit_Slots(QString userExitName, QString userExitMsg)
 {
 	//用户离开聊天室信息
@@ -72,6 +75,7 @@ void ChatRoomUI::userExit_Slots(QString userExitName, QString userExitMsg)
 	ui.onlineNumber->setText(QString("%1").arg(ui.tableWidget->rowCount()));
 }
 
+//发送消息
 void ChatRoomUI::sendMessageBtn_Slots()
 {
 	if (ui.sendLineEdit->toPlainText() == "")
@@ -90,6 +94,7 @@ void ChatRoomUI::sendMessageBtn_Slots()
 	ui.sendLineEdit->clear();
 	ui.sendLineEdit->setFocus();
 }
+
 //回车按钮事件
 bool ChatRoomUI::eventFilter(QObject *target, QEvent *event)
 {
@@ -112,7 +117,8 @@ bool ChatRoomUI::eventFilter(QObject *target, QEvent *event)
 	return QWidget::eventFilter(target, event);
 }
 
-void ChatRoomUI::ChatMessage_Slots(QString message)
+//聊天消息
+void ChatRoomUI::chatMessage_Slots(QString message)
 {
 	ui.listWidget->setTextColor(Qt::black);
 	ui.listWidget->append(message);

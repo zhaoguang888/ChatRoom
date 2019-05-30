@@ -255,7 +255,7 @@ public:
 
     void retranslateUi(QDialog *LoginUI)
     {
-        LoginUI->setWindowTitle(QApplication::translate("LoginUI", "ChatRoom", Q_NULLPTR));
+        LoginUI->setWindowTitle(QApplication::translate("LoginUI", "\347\231\273\345\275\225", Q_NULLPTR));
         showLabel->setText(QApplication::translate("LoginUI", "\345\261\200\345\237\237\347\275\221\350\201\212\345\244\251\345\256\244", Q_NULLPTR));
         label->setText(QApplication::translate("LoginUI", "\350\264\246\345\217\267", Q_NULLPTR));
         accountLineEdit->setText(QApplication::translate("LoginUI", "100", Q_NULLPTR));

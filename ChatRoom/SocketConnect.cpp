@@ -17,6 +17,7 @@ SocketConnect *SocketConnect::GetIntance()
 SocketConnect::SocketConnect(QObject *parent)
 	: QTcpSocket(parent)
 {
+	hostAddress = new QHostAddress();	//初始化服务器地址对象
 	connect(this, SIGNAL(readyRead()), this, SLOT(dataReceived_Slot()));	//接收数据
 	
 }
@@ -25,7 +26,7 @@ SocketConnect::~SocketConnect()
 }
 
 
-//请求到服务器的类型
+//请求
 void SocketConnect::sendRequest(RequestTypeEnum type)
 {
 	switch (type)
@@ -36,11 +37,14 @@ void SocketConnect::sendRequest(RequestTypeEnum type)
 	case CHATMESSAGE:
 		sendChatMessage();
 		break;
+	case USERREGISTER:
+		sendUserRegister();
+		break;
 	default:
 		break;
 	}
 }
-//接收服务器的响应
+//接收
 void SocketConnect::dataReceived_Slot()
 {
 	while (bytesAvailable() > 0)
@@ -70,7 +74,11 @@ void SocketConnect::dataReceived_Slot()
 			break;
 		case CHATMESSAGE:
 			in >> chatMessage_Response;
-			emit ChatMessage_Signals(chatMessage_Response);
+			emit chatMessage_Signals(chatMessage_Response);
+			break;
+		case USERREGISTER:
+			in >> userAccount_Register;
+			emit userRegister_Signals(userAccount_Register);
 			break;
 		default:
 			break;
@@ -78,6 +86,7 @@ void SocketConnect::dataReceived_Slot()
 	}
 }
 
+//请求登录
 void SocketConnect::sendUserLogin()
 {
 	loginStatus = 0;
@@ -88,9 +97,7 @@ void SocketConnect::sendUserLogin()
 	//使用QByteArray对象来暂存要发送的数据，使用 QDataStream 将要发送的数据 写入QByteArray对象中。
 	QByteArray messageData;
 	QDataStream out(&messageData, QIODevice::WriteOnly);
-	//		登录类型         本机名      本机ip地址   本机账号   本机密码    本机登录状态
-	out << USERLOGIN << loaclComputerName << loaclComputerIP << UserAccount << UserPassword << loginStatus;
-
+	out << USERLOGIN << loaclComputerName << loaclComputerIP << userAccount << userPassword << loginStatus;
 	int length = write(messageData);
 	if (length != messageData.length())
 	{
@@ -99,12 +106,12 @@ void SocketConnect::sendUserLogin()
 	}
 }
 
+//发送聊天消息
 void SocketConnect::sendChatMessage()
 {
 	QByteArray messageData;
 	QDataStream out(&messageData, QIODevice::WriteOnly);
-	out << CHATMESSAGE << UserAccount << chatMessage_Request;
-
+	out << CHATMESSAGE << userAccount << chatMessage_Request;
 	int length = write(messageData);
 	if (length != messageData.length())
 	{
@@ -113,6 +120,21 @@ void SocketConnect::sendChatMessage()
 	}
 }
 
+//请求注册
+void SocketConnect::sendUserRegister()
+{
+	QByteArray messageData;
+	QDataStream out(&messageData, QIODevice::WriteOnly);
+	out << USERREGISTER << userName_Register << userPassword_Register;
+	int length = write(messageData);
+	if (length != messageData.length())
+	{
+		qDebug() << QString::fromLocal8Bit("数据发送错误");
+		return;
+	}
+}
+
+//本地ip地址的获取
 QString SocketConnect::getloaclComputerIP()
 {
 
