@@ -21,8 +21,8 @@ ChatRoomUI::ChatRoomUI(QWidget *parent)
 
 }
 
-//通知所有用户登录信息
-void ChatRoomUI::noticeAllClient_Slots(QString userEnterMsg, QString thisProgramUserName)
+//接收服务器传来的登录到聊天室信息的槽函数
+void ChatRoomUI::noticeAllClient_Slots(QString thisProgramUserName, QString userEnterMsg)
 {
 	if (userNameSwitch)
 	{
@@ -30,14 +30,12 @@ void ChatRoomUI::noticeAllClient_Slots(QString userEnterMsg, QString thisProgram
 		ui.clientName->setText(thisProgramUserName);
 		userNameSwitch = 0;
 	}
-
 	//用户进入聊天室信息
 	ui.listWidget->setTextColor(Qt::blue);
 	ui.listWidget->append(userEnterMsg);
-
 }
 
-//更新所有用户
+//接收服务器更新的所有在线用户信息的槽函数
 void ChatRoomUI::updateAllUser_Slots(QString userAccountName, QString userComputerIP)
 {
 	bool isEmpty = ui.tableWidget->findItems(userAccountName, Qt::MatchExactly).isEmpty();
@@ -54,25 +52,11 @@ void ChatRoomUI::updateAllUser_Slots(QString userAccountName, QString userComput
 	}
 }
 
-//关闭窗口重写函数
-void ChatRoomUI::closeEvent(QCloseEvent * event)
+//接收服务器传来的聊天消息的槽函数
+void ChatRoomUI::chatMessage_Slots(QString message)
 {
-	chatRoom->disconnectFromHost();
-}
-//用户退出
-void ChatRoomUI::userExit_Slots(QString userExitName, QString userExitMsg)
-{
-	//用户离开聊天室信息
-	ui.listWidget->setTextColor(Qt::gray);
-	ui.listWidget->append(userExitMsg);
 	ui.listWidget->setTextColor(Qt::black);
-
-	//用户表格信息删除
-	int row = ui.tableWidget->findItems(userExitName, Qt::MatchExactly).first()->row();
-	ui.tableWidget->removeRow(row);
-
-	//更新在线用户数
-	ui.onlineNumber->setText(QString("%1").arg(ui.tableWidget->rowCount()));
+	ui.listWidget->append(message);
 }
 
 //发送消息
@@ -94,6 +78,34 @@ void ChatRoomUI::sendMessageBtn_Slots()
 	ui.sendLineEdit->clear();
 	ui.sendLineEdit->setFocus();
 }
+
+//关闭窗口重写函数
+void ChatRoomUI::closeEvent(QCloseEvent * event)
+{
+	if (chatRoom->waitForConnected())
+	{
+		//用户退出处理-----修改数据库数据
+		chatRoom->sendRequest(RequestTypeEnum::USEREXITHANDLE);
+	}
+	chatRoom->disconnectFromHost();
+}
+
+//接收服务器把数据库数据修改后传给客户端的信息
+void ChatRoomUI::userExit_Slots(QString userExitName, QString userExitMsg)
+{
+	//用户离开聊天室信息
+	ui.listWidget->setTextColor(Qt::gray);
+	ui.listWidget->append(userExitMsg);
+	ui.listWidget->setTextColor(Qt::black);
+
+	//用户表格信息删除
+	int row = ui.tableWidget->findItems(userExitName, Qt::MatchExactly).first()->row();
+	ui.tableWidget->removeRow(row);
+
+	//更新在线用户数
+	ui.onlineNumber->setText(QString("%1").arg(ui.tableWidget->rowCount()));
+}
+
 
 //回车按钮事件
 bool ChatRoomUI::eventFilter(QObject *target, QEvent *event)
@@ -117,9 +129,3 @@ bool ChatRoomUI::eventFilter(QObject *target, QEvent *event)
 	return QWidget::eventFilter(target, event);
 }
 
-//聊天消息
-void ChatRoomUI::chatMessage_Slots(QString message)
-{
-	ui.listWidget->setTextColor(Qt::black);
-	ui.listWidget->append(message);
-}

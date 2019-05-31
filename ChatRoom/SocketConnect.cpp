@@ -40,6 +40,9 @@ void SocketConnect::sendRequest(RequestTypeEnum type)
 	case USERREGISTER:
 		sendUserRegister();
 		break;
+	case USEREXITHANDLE:
+		sendUserExitHandle();
+		break;
 	default:
 		break;
 	}
@@ -62,7 +65,7 @@ void SocketConnect::dataReceived_Slot()
 			break;
 		case NOTICEALLCLIENT:
 			in >> thisProgramUserName >> userEnterMsg;
-			emit noticeAllClient_Signals(userEnterMsg, thisProgramUserName);
+			emit noticeAllClient_Signals(thisProgramUserName, userEnterMsg);
 			break;
 		case UPDATEALLUSER:
 			in >> userAccountName >> userComputerIP;
@@ -92,18 +95,12 @@ void SocketConnect::sendUserLogin()
 	loginStatus = 0;
 	loaclComputerName = QHostInfo::localHostName();
 	loaclComputerIP = getloaclComputerIP();
-	qDebug() << loginStatus << loaclComputerName << loaclComputerIP;
 
 	//使用QByteArray对象来暂存要发送的数据，使用 QDataStream 将要发送的数据 写入QByteArray对象中。
 	QByteArray messageData;
 	QDataStream out(&messageData, QIODevice::WriteOnly);
 	out << USERLOGIN << loaclComputerName << loaclComputerIP << userAccount << userPassword << loginStatus;
 	int length = write(messageData);
-	if (length != messageData.length())
-	{
-		qDebug() << QString::fromLocal8Bit("数据发送错误");
-		return;
-	}
 }
 
 //发送聊天消息
@@ -111,13 +108,8 @@ void SocketConnect::sendChatMessage()
 {
 	QByteArray messageData;
 	QDataStream out(&messageData, QIODevice::WriteOnly);
-	out << CHATMESSAGE << userAccount << chatMessage_Request;
+	out << CHATMESSAGE << chatMessage_Request;
 	int length = write(messageData);
-	if (length != messageData.length())
-	{
-		qDebug() << QString::fromLocal8Bit("数据发送错误");
-		return;
-	}
 }
 
 //请求注册
@@ -127,11 +119,15 @@ void SocketConnect::sendUserRegister()
 	QDataStream out(&messageData, QIODevice::WriteOnly);
 	out << USERREGISTER << userName_Register << userPassword_Register;
 	int length = write(messageData);
-	if (length != messageData.length())
-	{
-		qDebug() << QString::fromLocal8Bit("数据发送错误");
-		return;
-	}
+}
+
+//用户退出更新数据库处理
+void SocketConnect::sendUserExitHandle()
+{
+	QByteArray messageData;
+	QDataStream out(&messageData, QIODevice::WriteOnly);
+	out << USEREXITHANDLE;
+	int length = write(messageData);
 }
 
 //本地ip地址的获取

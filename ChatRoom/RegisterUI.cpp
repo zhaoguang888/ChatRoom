@@ -8,9 +8,9 @@ RegisterUI::RegisterUI(QWidget *parent)
 
 	socketConnect = SocketConnect::GetIntance(); //获取Socket的单例
 
-	connect(ui.btn_OK, SIGNAL(clicked()), this, SLOT(btnOK_Slots()));	
-	connect(ui.btn_Cancel, SIGNAL(clicked()), this, SLOT(btnCancel_Slots()));	
-	connect(socketConnect, SIGNAL(userRegister_Signals(QString)), this, SLOT(userRegister_Slots(QString)));
+	connect(ui.btn_OK, SIGNAL(clicked()), this, SLOT(btnOK_Slots()));			//确定按钮
+	connect(ui.btn_Cancel, SIGNAL(clicked()), this, SLOT(btnCancel_Slots()));	//取消按钮
+	connect(socketConnect, SIGNAL(userRegister_Signals(QString)), this, SLOT(userRegister_Slots(QString)));	//接收账号槽函数
 }
 
 RegisterUI::~RegisterUI()
@@ -66,7 +66,7 @@ void RegisterUI::btnCancel_Slots()
 	this->reject();
 }
 
-//接收账号
+//接收账号槽函数
 void RegisterUI::userRegister_Slots(QString account)
 {
 	QMessageBox::information(this, QString::fromLocal8Bit("注册成功！"), QString::fromLocal8Bit("注册成功！你的账号是：\n%1").arg(account));

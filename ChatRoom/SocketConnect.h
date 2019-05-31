@@ -5,7 +5,7 @@
 
 enum RequestTypeEnum
 {
-	USERLOGIN, USERLOGINCHECK, UPDATEALLUSER, NOTICEALLCLIENT, USEREXIT, CHATMESSAGE, USERREGISTER
+	USERLOGIN, USERLOGINCHECK, UPDATEALLUSER, NOTICEALLCLIENT, USEREXITHANDLE, USEREXIT, CHATMESSAGE, USERREGISTER
 };
 
 class SocketConnect : public QTcpSocket
@@ -25,18 +25,20 @@ public:
 	QHostAddress *hostAddress;		//服务器地址对象
 
 	//发送到服务器的信息
+	//登录功能
 	QString loaclComputerName;	//电脑名
 	QString loaclComputerIP;	//ip地址
 	QString userAccount;		//账号
 	QString userPassword;		//密码
 	int loginStatus;			//登录状态
-
+	//聊天功能
 	QString chatMessage_Request;	//要发送聊天信息
 	QString chatMessage_Response;	//接收到的聊天消息
-
+	//注册功能
 	QString userName_Register;		//注册用户的名字
 	QString userPassword_Register;	//注册用户的密码
 	QString userAccount_Register;	//注册到用户的账号
+
 
 	//接收服务器的响应信息
 	int statusValidate;	//登录验证的状态：0--验证失败；1--验证成功；2--用户已登录
@@ -57,7 +59,8 @@ public:
 	void sendRequest(RequestTypeEnum);	//发送请求
 	void sendUserLogin();		//请求登录
 	void sendChatMessage();		//发送聊天消息
-	void sendUserRegister();	//请求注册	
+	void sendUserRegister();	//请求注册
+	void sendUserExitHandle();	//用户退出更新数据库处理
 
 private slots:
 	void dataReceived_Slot();		//数据来到的发出的 readyRead() 信号
