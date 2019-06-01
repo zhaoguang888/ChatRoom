@@ -1,2 +1,2 @@
 # ChatRoom
-一款基于Qt的局域网聊天室，此仓库是该聊天室的客户端。
+ChatRoomServer.ico
