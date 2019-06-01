@@ -59,6 +59,7 @@ void ChatRoomUI::chatMessage_Slots(QString message)
 	ui.listWidget->append(message);
 }
 
+
 //发送消息
 void ChatRoomUI::sendMessageBtn_Slots()
 {
@@ -87,6 +88,7 @@ void ChatRoomUI::closeEvent(QCloseEvent * event)
 		//用户退出处理-----修改数据库数据
 		chatRoom->sendRequest(RequestTypeEnum::USEREXITHANDLE);
 	}
+	QMessageBox::information(this, QString::fromLocal8Bit("information"), QString::fromLocal8Bit("退出成功！"));
 	chatRoom->disconnectFromHost();
 }
 

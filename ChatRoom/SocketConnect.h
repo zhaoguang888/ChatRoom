@@ -63,7 +63,7 @@ public:
 	void sendUserExitHandle();	//用户退出更新数据库处理
 
 private slots:
-	void dataReceived_Slot();		//数据来到的发出的 readyRead() 信号
+	void dataReceived_Slot();	//数据来到的发出的 readyRead() 信号
 signals:
 	void userLoginCheck_Signals(int);				//登录验证的状态：0--验证失败；1--验证成功；2--用户已登录
 signals:

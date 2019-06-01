@@ -12,7 +12,8 @@ public:
 	ChatRoomUI(QWidget *parent = Q_NULLPTR);
 
 private:
-	SocketConnect* chatRoom;
+	SocketConnect* chatRoom;	//Socketµ¥Àý
+
 	int userNameSwitch = 1;
 
 private:

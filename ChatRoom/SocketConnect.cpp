@@ -19,7 +19,6 @@ SocketConnect::SocketConnect(QObject *parent)
 {
 	hostAddress = new QHostAddress();	//初始化服务器地址对象
 	connect(this, SIGNAL(readyRead()), this, SLOT(dataReceived_Slot()));	//接收数据
-	
 }
 SocketConnect::~SocketConnect()
 {
