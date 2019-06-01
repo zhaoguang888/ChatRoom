@@ -30,50 +30,53 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\ChatRoomUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ChatRoomUI.cpp">
+    <ClCompile Include="src\LoginUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LoginUI.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RegisterUI.cpp">
+    <ClCompile Include="src\RegisterUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SocketConnect.cpp">
+    <ClCompile Include="src\SocketConnect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="ChatRoomUI.h">
+    <QtMoc Include="src\ChatRoomUI.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="LoginUI.h">
+    <QtMoc Include="src\LoginUI.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="RegisterUI.h">
+    <QtMoc Include="src\RegisterUI.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="SocketConnect.h">
+    <QtMoc Include="src\SocketConnect.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="ChatRoomUI.qrc">
+    <QtRcc Include="src\ChatRoomUI.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="ChatRoomUI.ui">
+    <QtUic Include="src\ChatRoomUI.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="LoginUI.ui">
+    <QtUic Include="src\LoginUI.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="RegisterUI.ui">
+    <QtUic Include="src\RegisterUI.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon.rc" />
   </ItemGroup>
 </Project>
